@@ -1,0 +1,17 @@
+name: Workflow 2
+
+on:
+  repository_dispatch:
+
+jobs:
+  respond-to-trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Extract Event Payload
+        run: |
+          echo "Branch: ${{ github.event.client_payload.branch }}"
+          echo "Commit: ${{ github.event.client_payload.commit }}"
+          echo "Build Number: ${{ github.event.client_payload.build_number }}"
+
+      - name: Perform Workflow 2 Tasks
+        run: echo "Workflow 2 executed successfully!"
