@@ -21,7 +21,7 @@ jobs:
         shell: pwsh
         run: |
           Write-Host "Sending notification to Microsoft Teams"
-      
+
           $status = '${{ job.status }}'
           $suite = "Sanity"
           $environment = "Staging"
@@ -39,17 +39,16 @@ jobs:
           $body = @{
             "@type" = "MessageCard"
             "@context" = "http://schema.org/extensions"
-            "text" = "Execution of Automated test completed with the following details:"
+            "text" = "- Execution of automated test completed with the following details:"
             "title" = "Automation Test Notification"
             "themeColor" = $themeColor
             "sections" = @(
               @{
                 "facts" = @(
-                  @{ "name" = "  Result"; "value" = $result }
-                  @{ "name" = "  Status"; "value" = $status }
-                  @{ "name" = "  Build No."; "value" = $buildNumber },
-                  @{ "name" = "  Environment"; "value" = $environment },
-                  @{ "name" = "  Site"; "value" = $site }
+                  @{ "name" = "   **Result**", "value" = $result }
+                  @{ "name" = "   **Build No.**", "value" = $buildNumber },
+                  @{ "name" = "   **Environment**"; "value" = $environment },
+                  @{ "name" = "   **Site**"; "value" = $site }
                 )
               }
             )
