@@ -45,10 +45,10 @@ jobs:
             "sections" = @(
               @{
                 "facts" = @(
-                  @{ "name" = "   **Result**", "value" = $result }
-                  @{ "name" = "   **Build No.**", "value" = $buildNumber },
-                  @{ "name" = "   **Environment**"; "value" = $environment },
-                  @{ "name" = "   **Site**"; "value" = $site }
+                  @{ "name" = "   Result"; "value" = $result }
+                  @{ "name" = "   **Build No.**"; "value" = $buildNumber },
+                  @{ "name" = "   Environment"; "value" = $environment },
+                  @{ "name" = "   Site"; "value" = $site }
                 )
               }
             )
