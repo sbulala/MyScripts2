@@ -45,6 +45,7 @@ jobs:
             "sections" = @(
               @{
                 "facts" = @(
+                  @{ "name" = "   Suite"; "value" = $suite }
                   @{ "name" = "   Result"; "value" = $result }
                   @{ "name" = "   Build No."; "value" = $buildNumber },
                   @{ "name" = "   Environment"; "value" = $environment },
