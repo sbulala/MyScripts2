@@ -15,3 +15,52 @@ jobs:
 
       - name: Perform Workflow 2 Tasks
         run: echo "Workflow 2 executed successfully!"
+
+      - name: Send Teams Notification
+        if: always()
+        shell: powershell
+        run: |
+          Write-Host "Sending notification to Microsoft Teams"
+
+          $status = '${{ job.status }}'
+          $environment = "Staging"
+          $site = "Latest"
+          $failedTest = "Sanity Tests"
+          $buildNumber = '1.0.0.1'
+
+          if ($status -eq 'failure') {
+            $message = "Sanity Test Failed!"
+            $details = "Environment: $environment`nSite: $site`nFailed Test: $failedTest"
+            $themeColor = "FF0000"
+          } else {
+            $message = "Sanity Test Passed!"
+            $details = "Environment: $environment`nSite: $site"
+            $themeColor = "00FF00"
+          }
+
+          $body = @{
+            "@type" = "MessageCard"
+            "@context" = "http://schema.org/extensions"
+            "text" = $message
+            "title" = "Sanity Test Notification"
+            "themeColor" = $themeColor
+            "sections" = @(
+              @{
+                "facts" = @(
+                  @{ "name" = "Build No."; "value" = $buildNumber },
+                  @{ "name" = "Environment"; "value" = $environment },
+                  @{ "name" = "Site"; "value" = $site },
+                  @{ "name" = "Details"; "value" = $details }
+                )
+              }
+            )
+          } | ConvertTo-Json -Depth 10
+
+          $webhookUrl = 'https://tylertech.webhook.office.com/webhookb2/fee32edf-9a7d-413c-aaaf-009cd84a3fc4@7cc5f0f9-ee5b-4106-a62d-1b9f7be46118/IncomingWebhook/5eaf925a5ac2406e9380cb53e926de50/00a91875-899e-4b0d-b991-89b502288683/V2ndRYsqIbN4dTiiVgMs8RdG-I86snZPbBzv4JC2OZsR81'
+          $response = Invoke-RestMethod -Uri $webhookUrl -Method Post -Body $body -ContentType 'application/json'
+          if ($response -ne 1) {
+            Write-Host "Failed to send Teams notification"
+            exit 1
+          }
+
+          Write-Output "Notification sent successfully"
