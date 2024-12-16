@@ -64,3 +64,52 @@ jobs:
           }
 
           Write-Output "Notification sent successfully"
+      
+      - name: Send Teams Notification
+        if: always()
+        shell: pwsh
+        run: |
+          Write-Host "Sending notification to Microsoft Teams"
+      
+          $status = '${{ job.status }}'
+          $environment = "Staging"
+          $site = "Latest"
+          $failedTest = "Sanity Tests"
+          $buildNumber = '${{ needs.generate-build-number.outputs.parsed-build-number }}'
+      
+          if ($status -eq 'failure') {
+            $message = "Sanity Test Failed!"
+            $details = "Environment: $environment`nSite: $site`nFailed Test: $failedTest"
+            $themeColor = "FF0000"
+          } else {
+            $message = "Sanity Test Passed!"
+            $details = "Environment: $environment`nSite: $site"
+            $themeColor = "00FF00"
+          }
+      
+          $body = @{
+            "@type" = "MessageCard"
+            "@context" = "http://schema.org/extensions"
+            "text" = $message
+            "title" = "Sanity Test Notification"
+            "themeColor" = $themeColor
+            "sections" = @(
+              @{
+                "facts" = @(
+                  @{ "name" = "Build No."; "value" = $buildNumber },
+                  @{ "name" = "Environment"; "value" = $environment },
+                  @{ "name" = "Site"; "value" = $site },
+                  @{ "name" = "Details"; "value" = $details }
+                )
+              }
+            )
+          } | ConvertTo-Json -Depth 10 -Compress
+      
+          $webhookUrl = '${{ secrets.TEAMS_WEBHOOK_URL }}'
+          $response = Invoke-RestMethod -Uri $webhookUrl -Method Post -Body $body -ContentType 'application/json'
+          if (-not $response) {
+            Write-Host "Failed to send Teams notification"
+            exit 1
+          }
+      
+          Write-Host "Notification sent successfully"
