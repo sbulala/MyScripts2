@@ -26,7 +26,7 @@ jobs:
           $environment = "Staging"
           $site = "Latest"
           $failedTest = "Sanity Tests"
-          $buildNumber = '${{ needs.generate-build-number.outputs.parsed-build-number }}'
+          $buildNumber = '1.0.0108'
       
           if ($status -eq 'failure') {
             $message = "Sanity Test Failed!"
@@ -35,22 +35,22 @@ jobs:
           } else {
             $message = "Sanity Test Passed!"
             $details = "Environment: $environment`nSite: $site"
-            $themeColor = "00FF00"
+            #$themeColor = "00FF00"
+            $themeColor = "FF0000"
           }
       
           $body = @{
             "@type" = "MessageCard"
             "@context" = "http://schema.org/extensions"
             "text" = $message
-            "title" = "Sanity Test Notification"
+            "title" = "Sanity Test Result"
             "themeColor" = $themeColor
             "sections" = @(
               @{
                 "facts" = @(
                   @{ "name" = "Build No."; "value" = $buildNumber },
                   @{ "name" = "Environment"; "value" = $environment },
-                  @{ "name" = "Site"; "value" = $site },
-                  @{ "name" = "Details"; "value" = $details }
+                  @{ "name" = "Site"; "value" = $site }
                 )
               }
             )
