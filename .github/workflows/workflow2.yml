@@ -39,7 +39,7 @@ jobs:
           $body = @{
             "@type" = "MessageCard"
             "@context" = "http://schema.org/extensions"
-            "text" = "- Execution of automated test completed with the following details:"
+            "text" = "**Execution of automated test completed with the following details:**"
             "title" = "Automation Test Notification"
             "themeColor" = $themeColor
             "sections" = @(
