@@ -46,7 +46,7 @@ jobs:
               @{
                 "facts" = @(
                   @{ "name" = "   Result"; "value" = $result }
-                  @{ "name" = "   **Build No.**"; "value" = $buildNumber },
+                  @{ "name" = "   Build No."; "value" = $buildNumber },
                   @{ "name" = "   Environment"; "value" = $environment },
                   @{ "name" = "   Site"; "value" = $site }
                 )
